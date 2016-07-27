@@ -73,6 +73,15 @@ module Zoho
           :"#{resource_name}_id"
         end
 
+        def get_other_formats(types)
+          for type in types
+            query = {
+              'accept' => type
+            }
+            define_method("get#{type.capitalize}"){response = Client.get "#{resource_path}", :query => query}
+          end
+        end
+
         def custom_request(http_method, api_path, http_options)
           response = Client.send http_method, api_path, http_options
 
