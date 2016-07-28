@@ -40,6 +40,13 @@ subscription = Zoho::Subscriptions::Subscription.find 187955000000053082
 
 # Calling custom actions on a resource
 subscription.cancel cancel_at_end: false
+
+# Calling custom method on a resource
+hosted_page = Zoho::Subscriptions::Hostedpage.updatesubscription subscription_id: 187955000000053082, addons: [{"addon_code": "ADDON_CODE","quantity": 10 }]
+
+# Get a resource in another format (ex: getPdf, getCsv...)
+invoice = Zoho::Subscriptions::Invoice.find invoice_id
+response = invoice.getPdf
 ```
 
 ## Supported Resources:
@@ -48,17 +55,18 @@ subscription.cancel cancel_at_end: false
   * [Addon](https://www.zoho.com/subscriptions/api/v1/#addons)
   * [Customer](https://www.zoho.com/subscriptions/api/v1/#customers)
   * [Subscription (basic resource methods (create, retrieve, update) + cancel)](https://www.zoho.com/subscriptions/api/v1/#subscriptions)
+  * [Invoice (basic resource methods)](https://www.zoho.com/subscriptions/api/v1/#invoices)
+  * [HostedPage](https://www.zoho.com/subscriptions/api/v1/#hosted-pages)
 
 ## Resources planned to be supported:
   * [Subscription (more custom actions)](https://www.zoho.com/subscriptions/api/v1/#subscriptions)
   * [Coupon](https://www.zoho.com/subscriptions/api/v1/#coupons)
   * [ContactPerson](https://www.zoho.com/subscriptions/api/v1/#contact-persons)
-  * [Invoice](https://www.zoho.com/subscriptions/api/v1/#invoices)
   * [Payment](https://www.zoho.com/subscriptions/api/v1/#payments)
   * [CreditNotes](https://www.zoho.com/subscriptions/api/v1/#credit-notes)
   * [Refund](https://www.zoho.com/subscriptions/api/v1/#refunds)
-  * [HostedPage](https://www.zoho.com/subscriptions/api/v1/#hosted-pages)
   * [Event](https://www.zoho.com/subscriptions/api/v1/#events)
+  * [Invoice (more custom actions)](https://www.zoho.com/subscriptions/api/v1/#invoices)
 
 ## Development
 
