@@ -119,6 +119,32 @@ module Zoho
           end
         end
 
+        def custom_singleton_action(action_name, http_method:, send_params_through: :body)
+          unless [:get, :post, :put, :delete].include? http_method
+            raise ArgumentError, "unsupported HTTP method: #{http_method}"
+          end
+
+          unless [:query, :body].include? send_params_through
+            raise ArgumentError, "unsupported params method: #{send_params_through}"
+          end
+
+          define_singleton_method action_name do |**params|
+            formatted_params = if send_params_through == :body
+                                 params.to_json
+                               else
+                                 params
+                               end
+
+            new_attributes = custom_request http_method,
+                                            "#{resource_path}/#{action_name}",
+                                            send_params_through => formatted_params
+            ressource = self.new
+            new_attributes.each do |attribute_name, value|
+              "ressource.#{attribute_name}= #{value}".to_sym
+            end
+          end
+        end
+
         def unexpected_response(response)
           case response.code
           when 400
