@@ -33,10 +33,13 @@ module Zoho
 
         def find(id)
           response = Client.get "#{resource_path}/#{id}"
-
           case response.code
           when 200
-            new response[resource_name].slice(*attribute_names.map(&:to_s))
+            if resource_name == 'hostedpage'
+              new response.slice(*attribute_names.map(&:to_s))
+            else
+              new response[resource_name].slice(*attribute_names.map(&:to_s))
+            end
           when 404, 400 # Could be a bug in the API but currently when not found the response code is 400
             raise Errors::NotFound, "cannot find #{resource_name} with id:#{id} "
           else

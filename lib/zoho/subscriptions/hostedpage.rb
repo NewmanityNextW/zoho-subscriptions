@@ -7,7 +7,8 @@ module Zoho
                           :action,
                           :expiring_time,
                           :created_time,
-                          :custom_fields
+                          :custom_fields,
+                          :data
 
       custom_singleton_action :updatesubscription, http_method: :post, send_params_through: :body
       custom_singleton_action :newsubscription, http_method: :post, send_params_through: :body
