@@ -36,7 +36,7 @@ module Zoho
           case response.code
           when 200
             if resource_name == 'hostedpage'
-              new response.slice(*attribute_names.map(&:to_s))
+              new response.slice(*attribute_names.map(&:to_s)) #zoho's hostedpage weird
             else
               new response[resource_name].slice(*attribute_names.map(&:to_s))
             end
@@ -87,10 +87,13 @@ module Zoho
 
         def custom_request(http_method, api_path, http_options)
           response = Client.send http_method, api_path, http_options
-
           case response.code
           when 200, 201
-            response[resource_name].slice(*attribute_names.map(&:to_s))
+            if resource_name == 'hostedpage'
+              new response["hosted_page"].slice(*attribute_names.map(&:to_s)) #zoho's hostedpage weird
+            else
+              new response[resource_name].slice(*attribute_names.map(&:to_s))
+            end
           else
             unexpected_response response
           end
@@ -122,6 +125,20 @@ module Zoho
           end
         end
 
+        def custom_singleton_request(http_method, api_path, http_options)
+          response = Client.send http_method, api_path, http_options
+          case response.code
+          when 200, 201
+            if resource_name == 'hostedpage' && response['hosted_page'] != nil
+              response["hosted_page"].slice(*attribute_names.map(&:to_s)) #zoho's hostedpage weird
+            else
+              response[resource_name].slice(*attribute_names.map(&:to_s))
+            end
+          else
+            unexpected_response response
+          end
+        end
+
         def custom_singleton_action(action_name, http_method:, send_params_through: :body)
           unless [:get, :post, :put, :delete].include? http_method
             raise ArgumentError, "unsupported HTTP method: #{http_method}"
@@ -138,7 +155,7 @@ module Zoho
                                  params
                                end
 
-            new_attributes = custom_request http_method,
+            new_attributes = custom_singleton_request http_method,
                                             "#{resource_path}/#{action_name}",
                                             send_params_through => formatted_params
             ressource = self.new
