@@ -13,6 +13,7 @@ module Zoho
     autoload :Addon
     autoload :Coupon
     autoload :Customer
+    autoload :Card
     autoload :ContactPerson
     autoload :Subscription
     autoload :Invoice
