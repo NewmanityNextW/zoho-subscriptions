@@ -1,6 +1,6 @@
 module Zoho
   module Subscriptions
-    class Coupon < RessourceBase
+    class Coupon < ResourceBase
       resource_attributes :coupon_code,
                           :name,
                           :description,
